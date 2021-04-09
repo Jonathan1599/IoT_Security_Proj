@@ -1,0 +1,22 @@
+<%- include('partials/header') %>
+<div class="container">
+  <div class="row">
+    <p style="text-align:center">Welcome <b><%= user %>,</b></p>
+    <h1 style="text-align:center">Register a new device!</h1>
+    <div style="width:37%; margin:40px auto;">
+      <form action="/devices/register" method="post" >
+        <div class="form-group">
+          <input class="form-control"  type= "text" placeholder="Device name" name="name">
+        </div>
+        <div class="form-group">
+          <input class="form-control" type= "text" placeholder="Connected Appliance" name = "connectedDevice">
+        </div>
+        <div class="form-group">
+          <button class="btn btn-lg btn-primary btn-block">Submit</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+  </body>
+</html>

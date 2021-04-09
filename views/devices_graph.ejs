@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  </head>
+  <body>
+    
+
+
+    <h1>Last detected Error:</h1></h1><h1 id="output"></h1>
+    <h2><strong>Temperature</strong></h2>
+    <canvas id="myChart1" width="50" height="50"></canvas>
+    <h2><strong><br>Power</strong></h2>
+    Enter the amount charged for one unit of electricity <input id = "input" type="text">
+    <button id="btn" href="javascript">Submit</button>
+    <canvas id="myChart2" width="50" height="50"></canvas>
+
+    <script>
+      let flag  = false
+      btn = document.getElementById("btn");
+      //op = document.getElementById("output");
+      btn.addEventListener("click", () => {
+        flagg = true;
+        input = document.getElementById("input").value;
+        for(let i=0 ; i< power.length ; i++)
+          power[i] = power[i]*(input*10/(60*60))/1000
+        
+        chart2.update();
+      })
+  
+      let temp=[] ,time=[],power =[];
+      let op = document.getElementById("output");
+      let  socket = io.connect('http://localhost:9000');
+     let NewSocket = io.connect('http://localhost:8000');
+
+      socket.on("firstdata", (data) => {
+       console.log(data);
+        data.dataval.forEach(element => {
+          temp.push(element.temperature);
+          time.push(element.time);
+          if( flag )
+          power.push(element.power*(input*10/(60*60))/1000);
+          //console.log(element);
+          else
+          power.push(element.power);
+        });
+        chart1.update();
+        chart2.update();
+      });
+
+      NewSocket.on("new", (newdata) => {
+        //console.log(newdata);
+        if(newdata.error)
+        {
+          if(newdata.error.substring(0,2) == "E1")
+          op.innerText = "Shock Detected " + newdata.time;
+          else if(newdata.error.substring(0,2) == "E2")
+          op.innerText = "Over power "  + newdata.time;
+          else if(newdata.error.substring(0,2) == "E3")
+          op.innerText = "High temperature " + newdata.time;
+        }
+        else
+        {
+          temp.push(newdata.temperature);
+          time.push(newdata.time);
+          if( flag )
+          power.push(newdata.power*(input*10/(60*60))/1000);
+          //console.log(element);
+          else
+          power.push(newdata.power);
+          console.log(newdata)
+        chart1.update();
+        chart2.update();
+        }
+      });
+
+      var ctx = document.getElementById('myChart1').getContext('2d');
+        var chart1 = new Chart(ctx, {
+      // The type of chart we want to create
+      type: 'line',
+
+      // The data for our dataset
+      data: {
+          labels: time,
+          datasets: [{
+              label: 'My First dataset',
+              //backgroundColor: 'rgb(255, 99, 132)',
+              borderColor: 'rgb(255, 99, 132)',
+              data: temp
+          }]
+      },
+
+
+      options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+      
+      // socket.on("data",(data) => {
+      //   servData.push(data.dataval);
+      //   op.innerHTML = servData;
+      //   chart.data.labels.push(data.dataval);
+      //   //chart.data.datasets.forEach((dataset) => {
+      //   //dataset.data.push(data.dataval);
+      //   chart.data.datasets.data.push(data.dataval);
+        
+      //});
+      
+    });
+    var ctx = document.getElementById('myChart2').getContext('2d');
+        var chart2 = new Chart(ctx, {
+      // The type of chart we want to create
+      type: 'line',
+
+      // The data for our dataset
+      data: {
+          labels: time,
+          datasets: [{
+              label: 'My First dataset',
+              //backgroundColor: 'rgb(255, 99, 132)',
+              borderColor: 'rgb(255, 204, 0)',
+              data: power
+          }]
+      },
+
+
+      options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+      
+      // socket.on("data",(data) => {
+      //   servData.push(data.dataval);
+      //   op.innerHTML = servData;
+      //   chart.data.labels.push(data.dataval);
+      //   //chart.data.datasets.forEach((dataset) => {
+      //   //dataset.data.push(data.dataval);
+      //   chart.data.datasets.data.push(data.dataval);
+        
+      //});
+      
+    });
+    
+//console.log(servData);
+</script>
+
+  </body>
+</html>

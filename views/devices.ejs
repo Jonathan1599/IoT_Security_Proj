@@ -1,0 +1,14 @@
+<%- include('partials/header') %>
+<div class="container">
+    <table>
+        <tr>
+            <td><strong>I.D</strong> </td>
+        </tr>
+        <% ids.forEach( id => { %>
+        <tr>
+            <td><a href="/devices/<%=id.toString()%>"><%= id.toString() %></a></td>
+        </tr>
+        <% }) %>
+    </table>
+</div>
+<%- include('partials/footer') %>
