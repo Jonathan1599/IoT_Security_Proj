@@ -10,7 +10,7 @@ const deviceRouter = require('./routes/devices');
 const apiRouter = require('./routes/api');
 
 const mongoose = require('mongoose');
-const connect = mongoose.connect('mongodb://localhost:27017/IoT');
+const connect = mongoose.connect('mongodb://localhost:27017/Security');
 
 const passport = require('passport');
 const authenticate = require('./authenticate');
