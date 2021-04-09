@@ -3,8 +3,11 @@ const bodyParser = require('body-parser');
 let User = require('../models/users');
 let router = express.Router();
 var passport = require('passport');
+const fs = require('fs');
+const fsPromises = fs.promises;
+
 //const connectEnsureLogin = require('connect-ensure-login');
-router.use(bodyParser.urlencoded());
+router.use(express.urlencoded());
 /* GET users listing. */
 router.route('/')
 .get( (req, res, next) => {
@@ -19,11 +22,8 @@ router.route('/login')
   res.setHeader('Content-Type','text/html');
   res.render('login');
 })
-.post(passport.authenticate('local', { successReturnToOrRedirect: '/', failureRedirect: 'login' }),(req,res,next) => {
 
-  if(req.headers['user-agent'] == "okhttp/3.12.0")
-    res.json({msg :"Congratulations"});
-  else
+.post(passport.authenticate('local', { successReturnToOrRedirect: '/', failureRedirect: 'login' }),(req,res,next) => {
   res.send("congratulations");
 })
 
@@ -85,6 +85,9 @@ router.post('/signupuser', (req,res, next) => {
         passport.authenticate('local')(req, res, () => {
         res.statusCode = 200;
         res.redirect('/')
+        fsPromises.mkdir('../User Media/' + user._id +" " + user.username)
+        .then( ()=> console.log("Folder created"))
+        .catch( () => console.error("Failed to create Directory"));
          });
        });
       }
