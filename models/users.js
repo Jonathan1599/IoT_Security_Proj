@@ -20,7 +20,12 @@ var User = new Schema({
     devices:[{
         type: mongoose.Schema.Types.ObjectId ,
         ref: 'Device'
-    }]
+    }],
+    
+    path:{
+        type: String,
+        default: ''
+    }
   
 })
 

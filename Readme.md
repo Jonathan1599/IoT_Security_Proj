@@ -1,1 +1,1 @@
-mongod --dbpath D:\Docs\mongodb\IoT-proj-data
+mongod --dbpath D:\Docs\mongodb\Security

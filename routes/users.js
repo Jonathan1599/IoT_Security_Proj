@@ -54,15 +54,7 @@ router.get('/test',(req,res,next) =>{
 
   else
   { 
-    if(req.headers['user-agent'] == "okhttp/3.12.0")
-    {
-    res.setHeader('Content-Type', 'application/json');
-    return res.json({msg: "Please Log in"});
-    }
-    else
-    {
       res.send("Please log in");
-    }
     console.log(req.headers['user-agent'])
   }
 })
